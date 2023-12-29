@@ -3,7 +3,7 @@
 ```text
 golang 1.21+
 ```
-## To use
+## To use u need public ip! Otherwise you get panic!!!
 ```go
 func main() {
 	client := rcon.NewClient("public_ip", 27015, "password", rcon.WithDeadline(time.Second*3))
