@@ -64,6 +64,7 @@ func (cl *Client) Auth() error {
 	if err := cl.send(packet); err != nil {
 		return err
 	}
+
 	response, err := cl.receive()
 	defer io.ReadAll(cl.conn)
 	if err != nil {
@@ -72,7 +73,7 @@ func (cl *Client) Auth() error {
 	if response.Type != SERVERDATA_AUTH_RESPONSE {
 		return ErrInvalidRespType
 	}
-	if response.ID != -1 {
+	if response.ID == -1 {
 		return ErrBadAuth
 	}
 	if response.ID != authID {
@@ -123,10 +124,12 @@ func (c *Client) send(packet *Packet) error {
 	return packet.Write(c.conn)
 }
 
-func (c *Client) receive() (output *Packet, err error) {
+func (c *Client) receive() (*Packet, error) {
+	var err error
+	output := new(Packet)
 	c.applyDeadline()
 	err = output.Read(c.conn)
-	return
+	return output, err
 }
 
 func (c *Client) applyDeadline() {
