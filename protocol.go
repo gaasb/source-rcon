@@ -53,7 +53,7 @@ func (p *Packet) Read(r io.Reader) error {
 		p.Size = readLE[int32](r)
 		p.ID = readLE[int32](r)
 		p.Type = readLE[PacketType](r)
-		if p.Type != SERVERDATA_AUTH {
+		if p.Type != SERVERDATA_AUTH && p.Size-10 > 0 {
 			p.Body = readBytes[string](r, uint(p.Size)-10)
 		}
 	}

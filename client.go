@@ -12,6 +12,7 @@ var (
 	authID    = int32(999)
 	executeID = int32(0)
 )
+var DefaultDeadline = time.Second * 1
 
 type Client struct {
 	conn   net.Conn
@@ -135,5 +136,7 @@ func (c *Client) receive() (*Packet, error) {
 func (c *Client) applyDeadline() {
 	if c.Config.deadline > 0 {
 		c.conn.SetDeadline(time.Now().Add(c.Config.deadline))
+	} else {
+		c.conn.SetDeadline(time.Now().Add(DefaultDeadline))
 	}
 }
